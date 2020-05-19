@@ -1,0 +1,29 @@
+* Encoding: ISO-8859-1.
+* Data set A
+
+REGRESSION
+  /MISSING LISTWISE
+  /STATISTICS COEFF OUTS CI(95) R ANOVA
+  /CRITERIA=PIN(.05) POUT(.10)
+  /NOORIGIN 
+  /DEPENDENT pain
+  /METHOD=ENTER stai_trait pain_cat sex_dummy age cortisol_serum mindfulness
+
+MIXED pain WITH stai_trait pain_cat sex_dummy age cortisol_serum mindfulness
+  /CRITERIA=CIN(95) MXITER(100) MXSTEP(10) SCORING(1) SINGULAR(0.000000000001) HCONVERGE(0, 
+    ABSOLUTE) LCONVERGE(0, ABSOLUTE) PCONVERGE(0.000001, ABSOLUTE)
+  /FIXED=stai_trait pain_cat sex_dummy age cortisol_serum mindfulness | SSTYPE(3)
+  /METHOD=REML
+  /PRINT=SOLUTION
+  /RANDOM=INTERCEPT | SUBJECT(hospital) COVTYPE(VC).
+
+* Dataset B 
+
+DATASET ACTIVATE DataSet5.
+
+COMPUTE R_sq=(Sum(pain_pred-mean(pain)*(pain_pred-mean(pain)))/(sum((pain)-mean(pain))*(pain)
+    -mean(pain))).
+EXECUTE.
+
+DESCRIPTIVES VARIABLES=R_sq
+  /STATISTICS=MEAN SUM STDDEV VARIANCE MIN MAX.
